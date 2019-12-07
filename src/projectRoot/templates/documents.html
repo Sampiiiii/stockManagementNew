@@ -1,0 +1,33 @@
+{% block content %}
+    {% block content_header%}
+    <h2>Documents</h2>
+    <p>
+        <a href="{% url 'upload_document' %}">Upload Document</a>
+    </p>
+    {% endblock %}
+    <table>
+        <thead>
+            <tr>
+            <th>Title</th>
+            <th>Download</th>
+            <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for d in Documents%}
+            <tr>
+                <td>{{d.name}}</td>
+                <td>
+                <a href="{{d.document.url}}" target="_blank">Download</a>
+                </td>
+                <td>
+                <form method="post" action="{% url 'delete_document' d.pk %}">
+                {% csrf_token %}
+                <button type="submit">DELETE</button>
+                </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

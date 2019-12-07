@@ -3,6 +3,17 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
+class document(models.Model):
+    name = models.CharField(max_length=255)
+    document = models.FileField(upload_to='documents')
+
+    def __str__(self):
+        return self.name
+
+    def delete(self, *args, **kwargs):
+        self.document.delete()
+        super().delete(*args, **kwargs)
+
 class suppliers (models.Model):
     supplierID = models.CharField(max_length=10, primary_key=True)
     supplierName = models.CharField(max_length=100)
