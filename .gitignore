@@ -1,0 +1,5 @@
+envs/  # VSCode directory where it auto finds virtualenvs 
+/volumes  # We don't want to checkin our DB volume
+/src/media  # We don't want to checkin our Django media files
+/src/static  # We don't want to checkin our Django static files
+.vscode/  # The VSCode config directory
