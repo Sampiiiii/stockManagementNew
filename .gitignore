@@ -3,3 +3,15 @@ envs/  # VSCode directory where it auto finds virtualenvs
 /src/media  # We don't want to checkin our Django media files
 /src/static  # We don't want to checkin our Django static files
 .vscode/  # The VSCode config directory
+.installed.cfg
+bin
+develop-eggs
+dist
+downloads
+eggs
+parts
+src/*.egg-info
+lib
+lib64
+*.pyc
+*.pyo
