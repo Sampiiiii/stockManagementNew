@@ -2,11 +2,12 @@
 from django.contrib import admin
 from django.urls import include, path
 from databaseFunctions import views
-
+from core import views2
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', views2.Home.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('databaseFunctions/', include('databaseFunctions.urls')),
     path('documents/', views.document_list, name='document_list'),
