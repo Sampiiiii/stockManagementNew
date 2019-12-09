@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
     <h2>Upload Document</h2>
     <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{form.as_p}}
+    {{form}}
     <button type"submit">Upload Document</button>
     </form>
 {% endblock content %}

@@ -13,11 +13,7 @@ urlpatterns = [
     path('documents/', views.document_list, name='document_list'),
     path('documents/upload', views.upload_document, name='upload_document'),
     path('documents/<int:pk>/', views.delete_document, name='delete_document'),
-
-    path('class/documents/', views.DocumentList.as_view(), name='DocumentList'),
-    path('class/documents/upload', views.DocumentUpload.as_view(), name='UploadDocument'),
-
-    path('upload/', views.upload, name='upload')
+    path('documents/process/<int:pk>/', views.process_document, name='process_document'),
 ]
 
 if settings.DEBUG:

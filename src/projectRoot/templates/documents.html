@@ -1,34 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
-    {% block content_header%}
-    <h2>Documents</h2>
-    <p>
-        <a href="{% url 'upload_document' %}">Upload Document</a>
-    </p>
-    {% endblock %}
-    <table>
-        <thead>
-            <tr>
+{% block content_header%}
+<h2>Documents</h2>
+<p>
+    <a href="{% url 'upload_document' %}">Upload Document</a>
+</p>
+{% endblock %}
+<table>
+    <thead>
+        <tr>
             <th>Title</th>
+            <th>Date & Time Added</th>
             <th>Download</th>
             <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for d in Documents%}
-            <tr>
-                <td>{{d.name}}</td>
-                <td>
+            <th>Process</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in Documents %}
+        <tr>
+            <td><b>{{d.name}}</b></td>
+            <td>{{d.date}}</td>
+            <td>
                 <a href="{{d.document.url}}" target="_blank">Download</a>
-                </td>
-                <td>
+            </td>
+            <td>
                 <form method="post" action="{% url 'delete_document' d.pk %}">
-                {% csrf_token %}
-                <button type="submit">DELETE</button>
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
                 </form>
-                </td>
-            </tr>
+            </td>
+            <td>
+                <form method="post" action="{% url 'process_document' d.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Process</button>
+                </form>
+            </td>
+        </tr>
         {% endfor %}
-        </tbody>
-    </table>
+    </tbody>
+</table>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
 {% endblock content %}
