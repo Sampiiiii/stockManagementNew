@@ -9,7 +9,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views2.Home.as_view(), name='home'),
     path('admin/', admin.site.urls),
-    path('databaseFunctions/', include('databaseFunctions.urls')),
     path('documents/', views.document_list, name='document_list'),
     path('documents/upload', views.upload_document, name='upload_document'),
     path('documents/<int:pk>/', views.delete_document, name='delete_document'),

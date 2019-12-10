@@ -1,7 +1,11 @@
 body {
-    background-color: white;
+    background-color: lightgray;
 }
 
 .navbar {
-  background-color: lightgray;
+  background-color: gray;
+}
+
+table, th, td {
+  border: 1px solid black;
 }
