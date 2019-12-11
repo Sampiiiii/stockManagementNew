@@ -23,7 +23,10 @@ def parseSpreadsheet(path):
     sheet_names = workbook.sheet_names()
     sheet = workbook.sheet_by_name(sheet_names[0])
     Headers = sheet.row(1)
-    print(Headers)
+    print(Headers) # Headers encompass rows 0 and 1
+    print(sheet.nrows) # Amount of rows
+    for i in range(2, sheet.nrows): # Each row is a product entry from 2 - 172
+        print(sheet.row(i))
     pass
 
 def parseCSV(path):

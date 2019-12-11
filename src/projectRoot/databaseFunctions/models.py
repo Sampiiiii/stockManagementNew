@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-class document(models.Model):
+class document(models.Model): # File storing module
     name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
     document = models.FileField(upload_to='documents')
@@ -22,29 +22,39 @@ class suppliers (models.Model):
     supplierEmail = models.CharField(max_length=254)
     companyNumber = models.CharField(max_length=50)
 
-class statuses (models.Model):
-    statusID = models.CharField(max_length=5, primary_key=True)
-    status = models.CharField(max_length=50)
+    def __str__(self):
+        return self.supplierName
 
 class locations (models.Model):
     locationID = models.CharField(max_length=10, primary_key=True)
     locationName = models.CharField(max_length=100)
 
-class categories (models.Model):
-    productCategoryID = models.IntegerField(primary_key=True)
-    productCategory = models.CharField(max_length=50)
-
-class product (models.Model): # Instantiating each Field in the Database Table
+    def __str__(self):
+        return self.locationName
+    
+class product (models.Model): # Populated First
     masterPN = models.CharField(max_length=10, primary_key=True)
     amendedPN = models.CharField(max_length=10)
     gaiaPN = models.CharField(max_length=10)
     SgPN = models.CharField(max_length=40)
     supplementaryPN = models.CharField(max_length=40)
     description = models.TextField()
-    productCategoryID = models.ForeignKey(categories, on_delete=models.CASCADE)
+    category_choices = [
+        ('aaa', 'null'),
+        ('ASH', 'AIR|SHIELD™'),
+        ('AMA', 'AIR|MAT™'),
+        ('APA', 'AIR|PAKK™'),
+        ('CCA', 'Corr Case '),
+        ('TCO', 'TRANS|COVER'),
+        ('TCA', 'TRANS|CASE '),
+    ]
+    productCategory = models.CharField(max_length=3, choices=category_choices, default='aaa')
     isManual = models.BooleanField()
     filmThickness = models.IntegerField()
-    statusID = models.ForeignKey(statuses, on_delete=models.CASCADE)
+    statuses_choices = [
+        ('A', 'Active'),
+    ]
+    status = models.CharField(max_length=1, choices=statuses_choices, default='A')
     cylinderSequence = models.CharField(max_length=30)
     sealingSequence = models.CharField(max_length=30)
     USDCostPrice = models.FloatField(max_length=8)
@@ -68,8 +78,14 @@ class product (models.Model): # Instantiating each Field in the Database Table
     netWeight = models.FloatField(max_length=5)
     grossWeight = models.FloatField(max_length=5)
 
-class productStockStatus (models.Model):
+    def __str__(self):
+        return self.masterPN + self.description
+
+class productStockStatus (models.Model): #Generated Later
     MasterPN = models.ForeignKey(product, on_delete=models.CASCADE)
     locationID = models.ForeignKey(locations, on_delete=models.CASCADE)
     value = models.IntegerField()
     supplierID = models.ForeignKey(suppliers, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.value
