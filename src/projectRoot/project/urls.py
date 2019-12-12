@@ -13,6 +13,8 @@ urlpatterns = [
     path('documents/upload', views.upload_document, name='upload_document'),
     path('documents/<int:pk>/', views.delete_document, name='delete_document'),
     path('documents/process/<int:pk>/', views.process_document, name='process_document'),
+    path('products/', views.product_list, name='product_list'),
+    path('products/modify',views.modify_products, name='modify_products')
 ]
 
 if settings.DEBUG:

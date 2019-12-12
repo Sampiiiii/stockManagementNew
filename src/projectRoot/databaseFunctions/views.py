@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from .forms import documentForm
+from .forms import documentForm, productForm
 from .models import document
 
 from .uploadhandler import handleFile
@@ -41,3 +41,12 @@ def process_document(request, pk):
         d = document.objects.get(pk=pk)
         handleFile(request, d.document)
         return HttpResponseRedirect('/documents')
+
+def product_list(request):
+    return render(request, 'products.html')
+
+def modify_products(request):
+    form = productForm()
+    return render(request, 'modify_product.html', {
+        'form': form
+    })

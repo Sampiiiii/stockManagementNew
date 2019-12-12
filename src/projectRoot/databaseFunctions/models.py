@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-from django.db import models
 
 class document(models.Model): # File storing module
     name = models.CharField(max_length=255)
@@ -23,22 +21,22 @@ class suppliers (models.Model):
     companyNumber = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.supplierName
+        return self.supplierID + ',' + self.supplierName
 
 class locations (models.Model):
     locationID = models.CharField(max_length=10, primary_key=True)
     locationName = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.locationName
+        return self.locationID + ',' + self.locationName
     
 class product (models.Model): # Populated First
     masterPN = models.CharField(max_length=10, primary_key=True)
-    amendedPN = models.CharField(max_length=10)
-    gaiaPN = models.CharField(max_length=10)
-    SgPN = models.CharField(max_length=40)
-    supplementaryPN = models.CharField(max_length=40)
-    description = models.TextField()
+    amendedPN = models.CharField(max_length=10, blank=True)
+    gaiaPN = models.CharField(max_length=10, blank=True)
+    SgPN = models.CharField(max_length=40, blank=True)
+    supplementaryPN = models.CharField(max_length=40, blank=True)
+    description = models.TextField(blank=True)
     category_choices = [
         ('aaa', 'null'),
         ('ASH', 'AIR|SHIELD™'),
@@ -50,36 +48,36 @@ class product (models.Model): # Populated First
     ]
     productCategory = models.CharField(max_length=3, choices=category_choices, default='aaa')
     isManual = models.BooleanField()
-    filmThickness = models.IntegerField()
+    filmThickness = models.IntegerField(blank=True)
     statuses_choices = [
         ('A', 'Active'),
     ]
     status = models.CharField(max_length=1, choices=statuses_choices, default='A')
-    cylinderSequence = models.CharField(max_length=30)
-    sealingSequence = models.CharField(max_length=30)
-    USDCostPrice = models.FloatField(max_length=8)
-    deliveredDutyGBP = models.FloatField(max_length=8)
-    gaiaSellPrice = models.FloatField(max_length=8)
-    samuelGrantPurchasePrice = models.FloatField(max_length=8)
-    samuelGrantBuyback = models.IntegerField()
-    PCSPerObject = models.IntegerField()
-    amountPerPallet = models.IntegerField()
-    minimumOrderQuantity = models.IntegerField()
-    deflatedWidth = models.IntegerField()
-    deflatedLength = models.IntegerField()
-    deflatedHeight = models.IntegerField()
-    inflatedWidth = models.IntegerField()
-    inflatedLength = models.IntegerField()
-    inflatedHeight = models.IntegerField()
-    CTNAmountPerPallet = models.IntegerField()
-    CTNWidth = models.IntegerField()
-    CTNLength = models.IntegerField()
-    CTNHeight = models.IntegerField()
-    netWeight = models.FloatField(max_length=5)
-    grossWeight = models.FloatField(max_length=5)
+    cylinderSequence = models.CharField(max_length=30, blank=True)
+    sealingSequence = models.CharField(max_length=30, blank=True)
+    USDCostPrice = models.FloatField(max_length=8, blank=True)
+    deliveredDutyGBP = models.FloatField(max_length=8, blank=True)
+    gaiaSellPrice = models.FloatField(max_length=8, blank=True)
+    samuelGrantPurchasePrice = models.FloatField(max_length=8, blank=True)
+    samuelGrantBuyback = models.IntegerField(blank=True)
+    PCSPerObject = models.IntegerField(blank=True)
+    amountPerPallet = models.IntegerField(blank=True)
+    minimumOrderQuantity = models.IntegerField(blank=True)
+    deflatedWidth = models.IntegerField(blank=True)
+    deflatedLength = models.IntegerField(blank=True)
+    deflatedHeight = models.IntegerField(blank=True)
+    inflatedWidth = models.IntegerField(blank=True)
+    inflatedLength = models.IntegerField(blank=True)
+    inflatedHeight = models.IntegerField(blank=True)
+    CTNAmountPerPallet = models.IntegerField(blank=True)
+    CTNWidth = models.IntegerField(blank=True)
+    CTNLength = models.IntegerField(blank=True)
+    CTNHeight = models.IntegerField(blank=True)
+    netWeight = models.FloatField(max_length=5, blank=True)
+    grossWeight = models.FloatField(max_length=5, blank=True)
 
     def __str__(self):
-        return self.masterPN + self.description
+        return self.masterPN + ',' +self.description
 
 class productStockStatus (models.Model): #Generated Later
     MasterPN = models.ForeignKey(product, on_delete=models.CASCADE)
@@ -88,4 +86,4 @@ class productStockStatus (models.Model): #Generated Later
     supplierID = models.ForeignKey(suppliers, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.value
+        return self.MasterPN + ',' + self.value

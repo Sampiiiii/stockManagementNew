@@ -10,7 +10,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light mb-4 ">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">Stock</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Stonks</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -20,7 +20,10 @@
             <a class="nav-link" href="{% url 'home' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'document_list' %}">Model Forms Upload</a>
+            <a class="nav-link" href="{% url 'document_list' %}">Document Upload</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'product_list' %}">Products List</a>
           </li>
         </ul>
       </div>
