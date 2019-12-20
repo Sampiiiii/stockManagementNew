@@ -31,7 +31,7 @@ class locations (models.Model):
         return self.locationID + ',' + self.locationName
     
 class product (models.Model): # Populated First
-    masterPN = models.CharField(max_length=10, primary_key=True)
+    primaryKey = models.IntegerField(primary_key=True)
     amendedPN = models.CharField(max_length=10, blank=True)
     gaiaPN = models.CharField(max_length=10, blank=True)
     SgPN = models.CharField(max_length=40, blank=True)

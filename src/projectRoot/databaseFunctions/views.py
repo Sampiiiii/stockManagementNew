@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from .forms import documentForm, productForm
-from .models import document
+from .models import document, product
 
 from .uploadhandler import handleFile
 
@@ -43,10 +43,18 @@ def process_document(request, pk):
         return HttpResponseRedirect('/documents')
 
 def product_list(request):
-    return render(request, 'products.html')
+    products = product.objects.all()
+    return render(request, 'products.html', {'products' : products})
 
-def modify_products(request):
-    form = productForm()
+def modify_product(request, pk):
+    if request.method =='POST':
+        print(pk)
+        p = product.objects.get(pk=pk)
+        form = productForm(instance=p)
     return render(request, 'modify_product.html', {
         'form': form
     })
+
+def product_add(request):
+    form = productForm()
+    return render(request, 'modify_product.html', {'form' : form})

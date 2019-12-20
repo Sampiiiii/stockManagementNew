@@ -5,13 +5,39 @@
 {% block content_header %}
 <h2>Products</h2>
 <p>
-    <a href="{% url 'modify_products' %}">Modify Product</a>
+    <a href="{% url 'product_add' %}">Add Product</a>
 </p>
-{% endblock content_header %}
-
-
-
-
-
-
-{% endblock content %}
+{% endblock %}
+<table>
+    <thead>
+        <tr>
+            <th>Product Number</th>
+            <th>Description</th>
+            <th>USD Cost Price</th>
+            <th>Delete</th>
+            <th>Modify</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr>
+            <td>{{p.amendedPN}}</td>
+            <td>{{p.description}}</td>
+            <td>{{p.USDCostPrice}}</td>
+            <td>
+                <form method="post" action="{% url 'delete_product' d.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" action="{% url 'modify_product' d.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Modify</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
