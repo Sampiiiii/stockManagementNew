@@ -10,7 +10,7 @@ class documentForm(forms.ModelForm):
 class productForm(forms.ModelForm):
     class Meta:
         model = product
-        fields = ('primaryKey', 'amendedPN', 'gaiaPN', 'SgPN', 'supplementaryPN',
+        fields = ('amendedPN', 'gaiaPN', 'SgPN', 'supplementaryPN',
         'description', 'productCategory', 'isManual', 'filmThickness',
         'status', 'cylinderSequence', 'sealingSequence', 'USDCostPrice',
         'deliveredDutyGBP', 'gaiaSellPrice', 'samuelGrantPurchasePrice', 'samuelGrantBuyback',

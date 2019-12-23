@@ -7,18 +7,14 @@ from django.contrib import messages
 
 from .models import product
 
-def genPrimaryKey():
-    pass
-
 def saveModel(valueList):
     valueList.insert(0, genPrimaryKey())
-    form = product.objects.get_or_create(
-            primaryKey=valueList[0], amendedPN=valueList[1], gaiaPN=valueList[2],
-            SgPN=valueList[3], supplementaryPN=valueList[6], description=valueList[5], productCategory=valueList[7],
-            isManual=valueList[8], filmTThickness=valueList[9], status=valueList[10], cylinderSequence=valueList[30],
-            sealingSequence=valueList[31], USDCostPrice=valueList[11], deliveredDutyGBP=valueList[12], gaiaSellPrice=valueList[13],
-            samuelGrantPurchasePrice=valueList[14], samuelGrantBuyback=valueList[15], PCSPerObject=valueList[16], amountPerPallet=valueList[17],
-            minimumOrderQuantity=valueList[18], deflatedWidth=valueList[19], deflatedLength=valueList[20], deflatedHeight=valueList[21], inflatedWidth=valueList[22],
+    form = product.objects.get_or_create( amendedPN=valueList[0], gaiaPN=valueList[1],
+            SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
+            isManual=valueList[7], filmTThickness=valueList[8], status=valueList[9], cylinderSequence=valueList[29],
+            sealingSequence=valueList[30], USDCostPrice=valueList[10], deliveredDutyGBP=valueList[11], gaiaSellPrice=valueList[12],
+            samuelGrantPurchasePrice=valueList[13], samuelGrantBuyback=valueList[14], PCSPerObject=valueList[15], amountPerPallet=valueList[16],
+            minimumOrderQuantity=valueList[17], deflatedWidth=valueList[18], deflatedLength=valueList[19], deflatedHeight=valueList[20], inflatedWidth=valueList[21],
             inflatedLength=valueList[22], inflatedHeight=valueList[23], CTNAmountPerPallet=valueList[24], CTNWidth=valueList[25], CTNLength=valueList[26], CTNHeight=valueList[27],
             netWeight=valueList[28], grossWeight=valueList[29], 
         )
