@@ -37,7 +37,7 @@ def delete_document(request, pk):
 
 def process_document(request, pk):
     if request.method =='POST':
-        print(pk)
+        #print(pk)
         d = document.objects.get(pk=pk)
         handleFile(request, d.document)
         return HttpResponseRedirect('/documents')
