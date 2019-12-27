@@ -52,7 +52,7 @@ class product (models.Model): # Populated First
     statuses_choices = [
         ('A', 'Active'),
     ]
-    status = models.CharField(max_length=1, choices=statuses_choices, default='A')
+    STATUS = models.CharField(max_length=1, choices=statuses_choices, default='A')
     cylinderSequence = models.CharField(max_length=30, blank=True)
     sealingSequence = models.CharField(max_length=30, blank=True)
     CP = models.FloatField(max_length=8, blank=True)

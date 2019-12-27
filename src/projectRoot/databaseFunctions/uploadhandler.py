@@ -65,22 +65,27 @@ def intelligentSpreadsheetParser(path):
     sheet = workbook.sheet_by_name(sheet_names[0])
     head, tailheaders = sheet.row(0), sheet.row(1)
     del tailheaders[32]
-    print(head)
-    print(tailheaders)
-    listOfEntriesAndTypes = {'amendedPN':'str', 'GAIAPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'status':'str', 'cylinderSequence':'str', 'sealingSequence':'str', 'CP':'float', 'DDP':'float', 'GAIASP':'float', 'SGPP':'float', 'SGBB':'float', 'PCSPerRoll':'int', 'PCSPerPallet':'int', 'MOQ':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 'CTNLength':'int', 'CTNHeight':'int', 'nettWeight':'int', 'grossWeight':'int'}
+    listOfEntriesAndTypes = {'amendedPN':'str', 'GAIAPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 
+    'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'STATUS':'str', 'cylinderSequence':'str', 
+    'sealingSequence':'str', 'CP':'float', 'DDP':'float', 'GAIASP':'float', 'SGPP':'float', 'SGBB':'float', 'PCSPerRoll':'int', 
+    'PCSPerPallet':'int', 'MOQ':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 
+    'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 
+    'CTNLength':'int', 'CTNHeight':'int', 'nettWeight':'int', 'grossWeight':'int'}
     # Work Out which column index is associated with each entry
-    colindex = 0
-    continueAppend = False
+    colindex = 0 # Keeping Track of which column indicates which database object
+    continueAppend = False # ContinueAppend, tempCounter and tempString are used to make the phonetic algorithm more accurate by changeing strings.
     tempCounter = 0
     tempString = ""
     for i in tailheaders:
         checkString = i.value
         appendString = head[colindex].value
-        if checkString =="Short Description":
+        if checkString =="Short Description": # Short Description will never be added to database in lieu of "Description"
             colindex += 1
         else:
-            if "(Kg) / CTN/ROLL" in checkString:
+            if "(Kg) / CTN/ROLL" in checkString: # Trimming Unnecessary SubStrings
                 checkString = checkString.replace("(Kg) / CTN/ROLL", "").lower()
+            elif " / CTN / Rolls " in checkString:
+                checkString = checkString.replace(" / CTN / Rolls ", "")
             colindex += 1
             if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True:
                 tempCounter += 1                

@@ -12,7 +12,7 @@ class productForm(forms.ModelForm):
         model = product
         fields = ('amendedPN', 'GAIAPN', 'SgPN', 'supplementaryPN',
         'description', 'productCategory', 'isManual', 'filmThickness',
-        'status', 'cylinderSequence', 'sealingSequence', 'CP',
+        'STATUS', 'cylinderSequence', 'sealingSequence', 'CP',
         'DDP', 'GAIASP', 'SGPP', 'SGBB', 'PCSPerRoll', 'PCSPerPallet', 'MOQ', 'deflatedWidth',
         'deflatedLength', 'deflatedHeight', 'inflatedWidth', 'inflatedLength', 'inflatedHeight',
         'CTNAmountPerPallet', 'CTNWidth', 'CTNLength', 'CTNHeight', 'nettWeight', 'grossWeight')
