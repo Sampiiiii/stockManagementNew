@@ -60,22 +60,27 @@ def parseSpreadsheet(path):
     pass
 
 def intelligentSpreadsheetParser(path):
+    # Open Spreadsheet
     workbook = rd.open_workbook(filename=path)
     sheet_names = workbook.sheet_names()
-    sheet = workbook.sheet_by_name(sheet_names[0])
-    head, tailheaders = sheet.row(0), sheet.row(1)
+    sheet = workbook.sheet_by_name(sheet_names[0]) # Product data is on the first sheet
+    head, tailheaders = sheet.row(0), sheet.row(1) 
     del tailheaders[32]
+    # The below dictionary is a lookup table of what each field in the database should store, this is used to deal with the issue of empty cells
     listOfEntriesAndTypes = {'amendedPN':'str', 'GAIAPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 
     'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'STATUS':'str', 'cylinderSequence':'str', 
     'sealingSequence':'str', 'CP':'float', 'DDP':'float', 'GAIASP':'float', 'SGPP':'float', 'SGBB':'float', 'PCSPerRoll':'int', 
     'PCSPerPallet':'int', 'MOQ':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 
     'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 
     'CTNLength':'int', 'CTNHeight':'int', 'nettWeight':'int', 'grossWeight':'int'}
+    
     # Work Out which column index is associated with each entry
     colindex = 0 # Keeping Track of which column indicates which database object
     continueAppend = False # ContinueAppend, tempCounter and tempString are used to make the phonetic algorithm more accurate by changeing strings.
     tempCounter = 0
     tempString = ""
+
+    listOfColumIndexesAndAssociatedFields = {}
     for i in tailheaders:
         checkString = i.value
         appendString = head[colindex].value
@@ -87,7 +92,7 @@ def intelligentSpreadsheetParser(path):
             elif " / CTN / Rolls " in checkString:
                 checkString = checkString.replace(" / CTN / Rolls ", "")
             colindex += 1
-            if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True:
+            if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True: # This is to increase phonetic algorithm accuracy
                 tempCounter += 1                
                 if tempCounter == 1:
                     tempString = appendString
@@ -101,6 +106,8 @@ def intelligentSpreadsheetParser(path):
                     continueAppend = False
                     tempString = ""
                     tempCounter = 0
+
+            # Determining String Similarity inside a smaller for loop which will check it against the keys of the above dictionary
             max = 0
             string = ""
             for j in listOfEntriesAndTypes.keys():
@@ -108,7 +115,7 @@ def intelligentSpreadsheetParser(path):
                 if similarity > max:
                     max = similarity
                     string = j
-            print(checkString, max,  string)
+            
 
 
 
