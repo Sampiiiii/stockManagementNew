@@ -2,14 +2,14 @@ import xlrd as rd
 import csv
 import os
 from difflib import SequenceMatcher
-import nltk
+import jellyfish
 
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 from .models import product
 
-def saveModel(valueList):
+def saveModel(valueList): #!TODO Redo SaveModel
     form = product.objects.get_or_create( amendedPN=valueList[0], gaiaPN=valueList[1],
             SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
             isManual=valueList[7], filmTThickness=valueList[8], status=valueList[9], cylinderSequence=valueList[29],
@@ -63,22 +63,47 @@ def intelligentSpreadsheetParser(path):
     workbook = rd.open_workbook(filename=path)
     sheet_names = workbook.sheet_names()
     sheet = workbook.sheet_by_name(sheet_names[0])
-    headers = sheet.row(1)
-    del headers[32]
-    listOfEntriesAndTypes = {'amendedPN':'str', 'gaiaPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'status':'str', 'cylinderSequence':'str', 'sealingSequence':'str', 'USDCostPrice':'float', 'deliveredDutyGBP':'float', 'gaiaSellPrice':'float', 'samuelGrantPurchasePrice':'float', 'samuelGrantBuyBack':'float', 'PCSPerObject':'int', 'amountPerPallet':'int', 'minimumOrderQuantity':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 'CTNLength':'int', 'CTNHeight':'int', 'netWeight':'int', 'grossWeight':'int'}
+    head, tailheaders = sheet.row(0), sheet.row(1)
+    del tailheaders[32]
+    print(head)
+    print(tailheaders)
+    listOfEntriesAndTypes = {'amendedPN':'str', 'GAIAPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'status':'str', 'cylinderSequence':'str', 'sealingSequence':'str', 'CP':'float', 'DDP':'float', 'GAIASP':'float', 'SGPP':'float', 'SGBB':'float', 'PCSPerRoll':'int', 'PCSPerPallet':'int', 'MOQ':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 'CTNLength':'int', 'CTNHeight':'int', 'nettWeight':'int', 'grossWeight':'int'}
     # Work Out which column index is associated with each entry
     colindex = 0
-    for i in headers:
-        #print(i.value, colindex)
-        colindex += 1
-        max = 0
-        string = ""
-        for j in listOfEntriesAndTypes.values():
-            similarity = nltk.metrics.distance.jaro_winkler_similarity(i.value, j.value, p=0.1)
-            if similarity > max:
-                max = similarity
-                string = j
-        print(i,max,  string)
+    continueAppend = False
+    tempCounter = 0
+    tempString = ""
+    for i in tailheaders:
+        checkString = i.value
+        appendString = head[colindex].value
+        if checkString =="Short Description":
+            colindex += 1
+        else:
+            if "(Kg) / CTN/ROLL" in checkString:
+                checkString = checkString.replace("(Kg) / CTN/ROLL", "").lower()
+            colindex += 1
+            if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True:
+                tempCounter += 1                
+                if tempCounter == 1:
+                    tempString = appendString
+                if "Deflated" in tempString:
+                    tempString = "deflated"
+                elif "Inflated" in tempString:
+                    tempString = "inflated"
+                continueAppend = True
+                checkString = tempString + " " + checkString
+                if tempCounter == 3:
+                    continueAppend = False
+                    tempString = ""
+                    tempCounter = 0
+            max = 0
+            string = ""
+            for j in listOfEntriesAndTypes.keys():
+                similarity = jellyfish.jaro_distance(checkString, j)
+                if similarity > max:
+                    max = similarity
+                    string = j
+            print(checkString, max,  string)
 
 
 

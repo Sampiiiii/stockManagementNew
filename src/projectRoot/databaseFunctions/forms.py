@@ -10,10 +10,9 @@ class documentForm(forms.ModelForm):
 class productForm(forms.ModelForm):
     class Meta:
         model = product
-        fields = ('amendedPN', 'gaiaPN', 'SgPN', 'supplementaryPN',
+        fields = ('amendedPN', 'GAIAPN', 'SgPN', 'supplementaryPN',
         'description', 'productCategory', 'isManual', 'filmThickness',
-        'status', 'cylinderSequence', 'sealingSequence', 'USDCostPrice',
-        'deliveredDutyGBP', 'gaiaSellPrice', 'samuelGrantPurchasePrice', 'samuelGrantBuyback',
-        'PCSPerObject', 'amountPerPallet', 'minimumOrderQuantity', 'deflatedWidth',
+        'status', 'cylinderSequence', 'sealingSequence', 'CP',
+        'DDP', 'GAIASP', 'SGPP', 'SGBB', 'PCSPerRoll', 'PCSPerPallet', 'MOQ', 'deflatedWidth',
         'deflatedLength', 'deflatedHeight', 'inflatedWidth', 'inflatedLength', 'inflatedHeight',
-        'CTNAmountPerPallet', 'CTNWidth', 'CTNLength', 'CTNHeight', 'netWeight', 'grossWeight')
+        'CTNAmountPerPallet', 'CTNWidth', 'CTNLength', 'CTNHeight', 'nettWeight', 'grossWeight')
