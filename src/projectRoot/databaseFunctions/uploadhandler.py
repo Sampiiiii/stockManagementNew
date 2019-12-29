@@ -81,6 +81,7 @@ def intelligentSpreadsheetParser(path):
     tempString = ""
 
     listOfColumIndexesAndAssociatedFields = {}
+
     for i in tailheaders:
         checkString = i.value
         appendString = head[colindex].value
@@ -110,18 +111,15 @@ def intelligentSpreadsheetParser(path):
             # Determining String Similarity inside a smaller for loop which will check it against the keys of the above dictionary
             max = 0
             string = ""
-            for j in listOfEntriesAndTypes.keys():
-                similarity = jellyfish.jaro_distance(checkString, j)
+            for key in listOfEntriesAndTypes.keys():
+                similarity = jellyfish.jaro_distance(checkString, key)
                 if similarity > max:
                     max = similarity
-                    string = j
+                    string = key
             
-
-
-
-
-
-    print(len(listOfEntriesAndTypes))
+            listOfColumIndexesAndAssociatedFields[listOfEntriesAndTypes.get(string)+","+string] = colindex
+    
+    print(listOfColumIndexesAndAssociatedFields)
 
 
 def parseCSV(path):

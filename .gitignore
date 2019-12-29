@@ -16,3 +16,5 @@ lib64
 *.pyc
 *.pyo
 ./src/projectRoot/meida/documents
+*.xlsx
+*.csv
