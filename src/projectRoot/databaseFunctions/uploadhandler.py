@@ -3,6 +3,7 @@ import csv
 import os
 from difflib import SequenceMatcher
 import jellyfish
+import time
 
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -60,6 +61,7 @@ def parseSpreadsheet(path):
     pass
 
 def intelligentSpreadsheetParser(path):
+    t1 = time.time()
     # Open Spreadsheet
     workbook = rd.open_workbook(filename=path)
     sheet_names = workbook.sheet_names()
@@ -118,8 +120,35 @@ def intelligentSpreadsheetParser(path):
                     string = key
             
             listOfColumIndexesAndAssociatedFields[listOfEntriesAndTypes.get(string)+","+string] = colindex
-    
     print(listOfColumIndexesAndAssociatedFields)
+    # Loop Ends
+    for rowIndex in (2, sheet.nrows):
+        tempList = []
+        colcount = 0
+        for cell in sheet.row(rowIndex):
+            print(cell)
+            try:
+                dataType = list(listOfColumIndexesAndAssociatedFields.keys())[list(listOfColumIndexesAndAssociatedFields.values()).index(colcount)].split(",")[0]
+            except:
+                dataType = "null"
+            var = cell.value
+            if var == "": # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
+                print(dataType)
+                if dataType == "int":
+                    var = -1
+                elif dataType == "float":
+                    var = -1.0
+                # pass               
+            tempList.append(var)
+            colcount += 1
+
+        print(tempList)
+        
+        # Save Model
+        pass
+
+    print("Time Taken: ", time.time() - t1)
+
 
 
 def parseCSV(path):
