@@ -1,7 +1,6 @@
 import xlrd as rd
 import csv
 import os
-from difflib import SequenceMatcher
 import jellyfish
 import time
 
@@ -10,25 +9,57 @@ from django.contrib import messages
 
 from .models import product
 
-def saveModel(valueList): #!TODO Redo SaveModel
-    form = product.objects.get_or_create( amendedPN=valueList[0], gaiaPN=valueList[1],
-            SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
-            isManual=valueList[7], filmTThickness=valueList[8], status=valueList[9], cylinderSequence=valueList[29],
-            sealingSequence=valueList[30], USDCostPrice=float(valueList[10]), deliveredDutyGBP=float(valueList[11]), gaiaSellPrice=float(valueList[12]),
-            samuelGrantPurchasePrice=float(valueList[13]), samuelGrantBuyback=float(valueList[14]), PCSPerObject=int(valueList[15]), amountPerPallet=int(valueList[16]),
-            minimumOrderQuantity=int(valueList[17]), deflatedWidth=int(valueList[18]), deflatedLength=int(valueList[19]), deflatedHeight=int(valueList[20]), inflatedWidth=int(valueList[21]),
-            inflatedLength=int(valueList[22]), inflatedHeight=int(valueList[23]), CTNAmountPerPallet=int(valueList[24]), CTNWidth=int(valueList[25]), CTNLength=int(valueList[26]), CTNHeight=int(valueList[27]),
-            netWeight=valueList[28], grossWeight=valueList[29], 
-        )
-    if form.is_valid():
-        form.save()
-        print(valueList[0], "Form Saved")
+def saveModel(valueList):
+    # Logic to determine status and product category
+    s = valueList[9]
+    pC = valueList[6]
+    print(valueList)
+    category_choices = [
+        ('aaa', 'null'),
+        ('ASH', 'AIR|SHIELD™'),
+        ('AMA', 'AIR|MAT™'),
+        ('APA', 'AIR|PAKK™'),
+        ('CCA', 'Corr Case '),
+        ('TCO', 'TRANS|COVER'),
+        ('TCA', 'TRANS|CASE '),
+    ]
+    statuses_choices = [
+        ('A', 'Active'),
+    ]
+    for category in category_choices:
+        if pC in category[1]:
+            valueList[6] = category[0]
+            print("Matched C")
+            break
     else:
-        print("Form is not")
-    pass
+        valueList[6] == 'aaa' # If category does not match fill it with the null value.
+        print("Not Matched C")
+    for status in statuses_choices:
+        if s in status[1]:
+            valueList[9] = status[0]
+            print("Matched S")
+            break
+    else:
+        valueList[9] = 'A'
+        print("Not Matched S")
+    if valueList[7].lower() == "manual":
+        valueList[7] = True
+    else:
+        valueList[7] = False
+    # Generating Form with inputs from the fed list
+    product = product.objects.get_or_create(amendedPN=valueList[0], GAIAPN=valueList[1],
+            SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
+            isManual=valueList[7], filmThickness=valueList[8], STATUS=valueList[9], cylinderSequence=valueList[29],
+            sealingSequence=valueList[30], CP=float(valueList[10]), DDP=float(valueList[11]), GAIASP=float(valueList[12]),
+            SGPP=float(valueList[13]), SGBB=float(valueList[14]), PCSPerRoll=int(valueList[15]), PCSPerPallet=int(valueList[16]),
+            MOQ=int(valueList[17]), deflatedWidth=int(valueList[18]), deflatedLength=int(valueList[19]), deflatedHeight=int(valueList[20]), inflatedWidth=int(valueList[21]),
+            inflatedLength=int(valueList[22]), inflatedHeight=int(valueList[23]), CTNAmountPerPallet=int(valueList[24]), CTNWidth=int(valueList[25]), CTNLength=int(valueList[26]), CTNHeight=int(valueList[27]),
+            nettWeight=valueList[28], grossWeight=valueList[29], 
+        )
+    form.save()
 
 def handleFile(request, spreadsheetUrl):
-    path = os.path.abspath('projectRoot/media/'+str(spreadsheetUrl))
+    path = os.path.abspath('projectRoot/media/'+str(spreadsheetUrl)) # Getting the path of the file from its url
     if path.endswith('.xlsx'):
         intelligentSpreadsheetParser(path)
         messages.info(request, "Parsing spreadsheet...")
@@ -122,29 +153,24 @@ def intelligentSpreadsheetParser(path):
             listOfColumIndexesAndAssociatedFields[listOfEntriesAndTypes.get(string)+","+string] = colindex
     print(listOfColumIndexesAndAssociatedFields)
     # Loop Ends
-    for rowIndex in (2, sheet.nrows):
+    for rowIndex in range(2, 12):# To sheet.nrows
         tempList = []
         colcount = 0
         for cell in sheet.row(rowIndex):
-            print(cell)
             try:
                 dataType = list(listOfColumIndexesAndAssociatedFields.keys())[list(listOfColumIndexesAndAssociatedFields.values()).index(colcount)].split(",")[0]
             except:
                 dataType = "null"
             var = cell.value
             if var == "": # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
-                print(dataType)
                 if dataType == "int":
                     var = -1
                 elif dataType == "float":
-                    var = -1.0
-                # pass               
+                    var = -1.0       
             tempList.append(var)
             colcount += 1
-
-        print(tempList)
-        
         # Save Model
+        saveModel(tempList)
         pass
 
     print("Time Taken: ", time.time() - t1)
