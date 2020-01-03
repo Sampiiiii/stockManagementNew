@@ -58,3 +58,10 @@ def modify_product(request, pk):
 def product_add(request):
     form = productForm()
     return render(request, 'modify_product.html', {'form' : form})
+
+def delete_product(request, pk):
+    if request.method == 'POST':
+        print(pk)
+        p = product.objects.get(pk=pk)
+        p.delete()
+        return HttpResponseRedirect('/products')

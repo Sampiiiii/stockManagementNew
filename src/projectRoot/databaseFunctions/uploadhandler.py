@@ -47,7 +47,7 @@ def saveModel(valueList):
     else:
         valueList[7] = False
     # Generating Form with inputs from the fed list
-    product = product.objects.get_or_create(amendedPN=valueList[0], GAIAPN=valueList[1],
+    p = product(amendedPN=valueList[0], GAIAPN=valueList[1],
             SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
             isManual=valueList[7], filmThickness=valueList[8], STATUS=valueList[9], cylinderSequence=valueList[29],
             sealingSequence=valueList[30], CP=float(valueList[10]), DDP=float(valueList[11]), GAIASP=float(valueList[12]),
@@ -56,7 +56,7 @@ def saveModel(valueList):
             inflatedLength=int(valueList[22]), inflatedHeight=int(valueList[23]), CTNAmountPerPallet=int(valueList[24]), CTNWidth=int(valueList[25]), CTNLength=int(valueList[26]), CTNHeight=int(valueList[27]),
             nettWeight=valueList[28], grossWeight=valueList[29], 
         )
-    form.save()
+    p.save()
 
 def handleFile(request, spreadsheetUrl):
     path = os.path.abspath('projectRoot/media/'+str(spreadsheetUrl)) # Getting the path of the file from its url
@@ -101,7 +101,7 @@ def intelligentSpreadsheetParser(path):
     del tailheaders[32]
     # The below dictionary is a lookup table of what each field in the database should store, this is used to deal with the issue of empty cells
     listOfEntriesAndTypes = {'amendedPN':'str', 'GAIAPN':'str', 'SgPN':'str', 'supplementaryPN':'str', 'description':'str', 
-    'productCategory':'str', 'isManual':'bool', 'filmThickness':'str', 'STATUS':'str', 'cylinderSequence':'str', 
+    'productCategory':'str', 'isManual':'bool', 'filmThickness':'int', 'STATUS':'str', 'cylinderSequence':'str', 
     'sealingSequence':'str', 'CP':'float', 'DDP':'float', 'GAIASP':'float', 'SGPP':'float', 'SGBB':'float', 'PCSPerRoll':'int', 
     'PCSPerPallet':'int', 'MOQ':'int', 'deflatedWidth':'int', 'deflatedLength':'int', 'deflatedHeight':'int', 
     'inflatedWidth':'int', 'inflatedLength':'int', 'inflatedHeight':'int', 'CTNAmountPerPallet':'int', 'CTNWidth':'int', 
@@ -115,8 +115,8 @@ def intelligentSpreadsheetParser(path):
 
     listOfColumIndexesAndAssociatedFields = {}
 
-    for i in tailheaders:
-        checkString = i.value
+    for columnHeader in tailheaders:
+        checkString = columnHeader.value
         appendString = head[colindex].value
         if checkString =="Short Description": # Short Description will never be added to database in lieu of "Description"
             colindex += 1
@@ -153,7 +153,7 @@ def intelligentSpreadsheetParser(path):
             listOfColumIndexesAndAssociatedFields[listOfEntriesAndTypes.get(string)+","+string] = colindex
     print(listOfColumIndexesAndAssociatedFields)
     # Loop Ends
-    for rowIndex in range(2, 12):# To sheet.nrows
+    for rowIndex in range(3, 4):
         tempList = []
         colcount = 0
         for cell in sheet.row(rowIndex):
@@ -162,15 +162,19 @@ def intelligentSpreadsheetParser(path):
             except:
                 dataType = "null"
             var = cell.value
-            if var == "": # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
+            print(dataType)
+            if var == '': # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
                 if dataType == "int":
                     var = -1
                 elif dataType == "float":
-                    var = -1.0       
+                    var = -1.0
+                elif dataType == "null":
+                    continue       
             tempList.append(var)
             colcount += 1
+        print(tempList)
         # Save Model
-        saveModel(tempList)
+        #saveModel(tempList)
         pass
 
     print("Time Taken: ", time.time() - t1)
