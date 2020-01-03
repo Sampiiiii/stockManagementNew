@@ -3,6 +3,7 @@ import csv
 import os
 import jellyfish
 import time
+import re
 
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -11,9 +12,8 @@ from .models import product
 
 def saveModel(valueList):
     # Logic to determine status and product category
-    s = valueList[9]
-    pC = valueList[6]
-    print(valueList)
+    s = valueList[8]
+    pC = valueList[5]
     category_choices = [
         ('aaa', 'null'),
         ('ASH', 'AIR|SHIELD™'),
@@ -28,33 +28,32 @@ def saveModel(valueList):
     ]
     for category in category_choices:
         if pC in category[1]:
-            valueList[6] = category[0]
-            print("Matched C")
+            valueList[5] = category[0]
             break
     else:
         valueList[6] == 'aaa' # If category does not match fill it with the null value.
-        print("Not Matched C")
     for status in statuses_choices:
         if s in status[1]:
-            valueList[9] = status[0]
-            print("Matched S")
+            valueList[8] = status[0]
             break
     else:
-        valueList[9] = 'A'
-        print("Not Matched S")
-    if valueList[7].lower() == "manual":
-        valueList[7] = True
+        valueList[8] = 'A'
+    if valueList[6].lower() == "manual":
+        valueList[6] = True
     else:
-        valueList[7] = False
+        valueList[6] = False
     # Generating Form with inputs from the fed list
     p = product(amendedPN=valueList[0], GAIAPN=valueList[1],
-            SgPN=valueList[2], supplementaryPN=valueList[5], description=valueList[4], productCategory=valueList[6],
-            isManual=valueList[7], filmThickness=valueList[8], STATUS=valueList[9], cylinderSequence=valueList[29],
-            sealingSequence=valueList[30], CP=float(valueList[10]), DDP=float(valueList[11]), GAIASP=float(valueList[12]),
-            SGPP=float(valueList[13]), SGBB=float(valueList[14]), PCSPerRoll=int(valueList[15]), PCSPerPallet=int(valueList[16]),
-            MOQ=int(valueList[17]), deflatedWidth=int(valueList[18]), deflatedLength=int(valueList[19]), deflatedHeight=int(valueList[20]), inflatedWidth=int(valueList[21]),
-            inflatedLength=int(valueList[22]), inflatedHeight=int(valueList[23]), CTNAmountPerPallet=int(valueList[24]), CTNWidth=int(valueList[25]), CTNLength=int(valueList[26]), CTNHeight=int(valueList[27]),
-            nettWeight=valueList[28], grossWeight=valueList[29], 
+            SgPN=valueList[2], description=valueList[3], supplementaryPN=valueList[4], productCategory=valueList[5],
+            isManual=valueList[6], filmThickness=valueList[7], STATUS=valueList[8], CP=float(valueList[9]), DDP=float(valueList[10]), 
+            GAIASP=float(valueList[11]),
+            SGPP=float(valueList[12]), SGBB=float(valueList[13]), PCSPerRoll=int(valueList[14]), PCSPerPallet=int(valueList[15]),
+            MOQ=int(valueList[16]), deflatedWidth=int(valueList[17]), deflatedLength=int(valueList[18]), 
+            deflatedHeight=int(valueList[19]), inflatedWidth=int(valueList[20]), inflatedLength=int(valueList[21]), 
+            inflatedHeight=int(valueList[22]), CTNAmountPerPallet=int(valueList[23]), CTNWidth=int(valueList[24]), 
+            CTNLength=int(valueList[25]), CTNHeight=int(valueList[26]), nettWeight=valueList[27], grossWeight=valueList[28], 
+            cylinderSequence=valueList[29],
+            sealingSequence=valueList[30],
         )
     p.save()
 
@@ -108,12 +107,12 @@ def intelligentSpreadsheetParser(path):
     'CTNLength':'int', 'CTNHeight':'int', 'nettWeight':'int', 'grossWeight':'int'}
     
     # Work Out which column index is associated with each entry
-    colindex = 0 # Keeping Track of which column indicates which database object
+    colindex = -1 # Keeping Track of which column indicates which database object
     continueAppend = False # ContinueAppend, tempCounter and tempString are used to make the phonetic algorithm more accurate by changeing strings.
     tempCounter = 0
     tempString = ""
 
-    listOfColumIndexesAndAssociatedFields = {}
+    listOfColumIndexesAndAssociatedFields = []
 
     for columnHeader in tailheaders:
         checkString = columnHeader.value
@@ -150,35 +149,49 @@ def intelligentSpreadsheetParser(path):
                     max = similarity
                     string = key
             
-            listOfColumIndexesAndAssociatedFields[listOfEntriesAndTypes.get(string)+","+string] = colindex
-    print(listOfColumIndexesAndAssociatedFields)
+            listOfColumIndexesAndAssociatedFields.append((listOfEntriesAndTypes.get(string), string, colindex))
     # Loop Ends
-    for rowIndex in range(3, 4):
+    for rowIndex in range(2, sheet.nrows):
         tempList = []
         colcount = 0
+        col = ""
         for cell in sheet.row(rowIndex):
-            try:
-                dataType = list(listOfColumIndexesAndAssociatedFields.keys())[list(listOfColumIndexesAndAssociatedFields.values()).index(colcount)].split(",")[0]
-            except:
-                dataType = "null"
-            var = cell.value
-            print(dataType)
-            if var == '': # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
-                if dataType == "int":
+            dataType = "null"
+            for t in listOfColumIndexesAndAssociatedFields: # T is the tuple inside the list
+                if colcount == int(t[2]):
+                    dataType = str(t[0])
+                    col = str(t[1])
+                    break
+            else:
+                dataType =="null"
+                col = ""
+            var = cell.value # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
+            if dataType == "int":
+                var = re.sub(r"\D","",str(var))
+                if var == "":
                     var = -1
-                elif dataType == "float":
+                tempList.append(var)
+            elif dataType == "float":
+                if var == "":
                     var = -1.0
-                elif dataType == "null":
-                    continue       
-            tempList.append(var)
+                tempList.append(var)
+            elif dataType == "str":
+                if var == "":
+                    var = ""
+                tempList.append(var)
+            elif dataType == "bool":
+                if var == "":
+                    var == "Manual"
+                tempList.append(var)
+            elif dataType == "null":
+                pass
             colcount += 1
-        print(tempList)
         # Save Model
-        #saveModel(tempList)
+        saveModel(tempList)
         pass
 
     print("Time Taken: ", time.time() - t1)
-
+    print("Done!")
 
 
 def parseCSV(path):

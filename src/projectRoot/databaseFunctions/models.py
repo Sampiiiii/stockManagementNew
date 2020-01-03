@@ -32,8 +32,8 @@ class locations (models.Model):
     
 class product (models.Model): # Populated First
     #id = models.AutoField(primary_key=True)
-    amendedPN = models.CharField(max_length=10, blank=True)
-    GAIAPN = models.CharField(max_length=10, blank=True)
+    amendedPN = models.CharField(max_length=30, blank=True)
+    GAIAPN = models.CharField(max_length=30, blank=True)
     SgPN = models.CharField(max_length=40, blank=True)
     supplementaryPN = models.CharField(max_length=40, blank=True)
     description = models.TextField(blank=True)
