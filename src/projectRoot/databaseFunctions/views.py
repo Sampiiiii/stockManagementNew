@@ -21,7 +21,7 @@ def upload_document(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/documents')
-            #!TODO make document name be automatic
+            #TODO make document name be automatic
     else:
         form = documentForm()
     return render(request, 'upload_document.html', {
@@ -67,4 +67,9 @@ def delete_product(request, pk):
         p.delete()
         return HttpResponseRedirect('/products')
 
-#!TODO add delete all function
+def delete_all_products(request):
+    if request.method == 'POST':
+        products = product.objects.all()
+        for p in products:
+            p.delete()
+    return HttpResponseRedirect('/products')

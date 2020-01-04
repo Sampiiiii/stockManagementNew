@@ -31,7 +31,6 @@ class locations (models.Model):
         return self.locationID + ',' + self.locationName
     
 class product (models.Model): # Populated First
-    #id = models.AutoField(primary_key=True)
     amendedPN = models.CharField(max_length=30, blank=True)
     GAIAPN = models.CharField(max_length=30, blank=True)
     SgPN = models.CharField(max_length=40, blank=True)
@@ -77,7 +76,7 @@ class product (models.Model): # Populated First
     grossWeight = models.FloatField(max_length=5, blank=True)
 
     def __str__(self):
-        return self.masterPN + ',' +self.description
+        return str(self.id) + ',' + self.description
 
 class productStockStatus (models.Model): #Generated Later
     MasterPN = models.ForeignKey(product, on_delete=models.CASCADE)
