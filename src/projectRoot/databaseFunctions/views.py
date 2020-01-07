@@ -21,7 +21,6 @@ def upload_document(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/documents')
-            #TODO make document name be automatic
     else:
         form = documentForm()
     return render(request, 'upload_document.html', {
@@ -51,6 +50,8 @@ def modify_product(request, pk):
         print(pk)
         p = product.objects.get(pk=pk)
         form = productForm(instance=p)
+        if form.is_valid():
+            form.save()
     return render(request, 'modify_product.html', {
         'form': form
     })
@@ -72,3 +73,5 @@ def delete_all_products(request):
         for p in products:
             p.delete()
     return HttpResponseRedirect('/products')
+
+

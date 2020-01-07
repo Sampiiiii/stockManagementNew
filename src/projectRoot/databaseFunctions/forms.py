@@ -5,7 +5,7 @@ from .models import document, product
 class documentForm(forms.ModelForm):
     class Meta:
         model = document
-        fields = ('name', 'document')
+        fields = ('document',)
   
 class productForm(forms.ModelForm):
     class Meta:

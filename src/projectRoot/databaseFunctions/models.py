@@ -2,7 +2,6 @@ from django.db import models
 
 
 class document(models.Model): # File storing module
-    name = models.CharField(max_length=255)
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
     document = models.FileField(upload_to='documents')
     
