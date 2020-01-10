@@ -6,7 +6,7 @@
 <h2>Products</h2>
 <p>
     <a href="{% url 'product_add' %}">Add Product</a>
-    <form method="post" action="{% url 'delete_all_products' %}">
+    <form method="post" action="{% url 'delete_all_products'  %}">
         {% csrf_token %}
         <button type="submit">Delete All</button>
     </form>

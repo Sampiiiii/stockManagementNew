@@ -2,10 +2,10 @@
 
 {% block content %}
     <h2>Modify Product</h2>
-    <form method="post">
-    {{form.as_p}}
+    <form method="POST">
     {% csrf_token %}
-    <button type"submit">Submit</button>
+    {{form.as_p}}
+    <button type="submit">Submit</button>
     {% comment "TODO" %}
     TODO make it so that documents actually save when being modified.
     {% endcomment %}
