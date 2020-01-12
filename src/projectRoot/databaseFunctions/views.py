@@ -47,9 +47,12 @@ def product_list(request):
     products = product.objects.all()
     return render(request, 'products.html', {'products' : products})
 
+#FIXME FIX THIS
 def modify_product(request, pk):
-    product_instance = get_object_or_404(product, pk=pk)
+    product_instance = product.objects.get(id=pk)
+    print(product_instance)
     form = productForm(request.POST or None, instance=product_instance)
+    print(form)
     if form.is_valid():
         form.save()
         return HttpResponseRedirect('/products')
@@ -58,11 +61,11 @@ def modify_product(request, pk):
     })
             
 def product_add(request):
-    form = productForm()
-    if form.is_valid():
+    form = productForm(request.POST)
+    if form.is_valid(): 
         form.save()
         return HttpResponseRedirect('/products')
-    return render(request, 'modify_product.html', {'form' : form})
+    return render(request, 'add_product.html', {'form' : form})
 
 def delete_product(request, pk):
     if request.method == 'POST':

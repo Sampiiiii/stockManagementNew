@@ -30,11 +30,11 @@ class locations (models.Model):
         return self.locationID + ',' + self.locationName
     
 class product (models.Model): # Populated First
-    amendedPN = models.CharField(max_length=30, blank=True)
-    GAIAPN = models.CharField(max_length=30, blank=True)
-    SgPN = models.CharField(max_length=40, blank=True)
-    supplementaryPN = models.CharField(max_length=40, blank=True)
-    description = models.TextField(blank=True)
+    amendedPN = models.CharField(max_length=30, blank=True, null=True)
+    GAIAPN = models.CharField(max_length=30, blank=True, null=True)
+    SgPN = models.CharField(max_length=40, blank=True,null=True)
+    supplementaryPN = models.CharField(max_length=40, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     category_choices = [
         ('aaa', 'null'),
         ('ASH', 'AIR|SHIELD™'),
@@ -46,33 +46,33 @@ class product (models.Model): # Populated First
     ]
     productCategory = models.CharField(max_length=3, choices=category_choices, default='aaa')
     isManual = models.BooleanField()
-    filmThickness = models.IntegerField(blank=True)
+    filmThickness = models.IntegerField(blank=True, null=True)
     statuses_choices = [
         ('A', 'Active'),
     ]
     STATUS = models.CharField(max_length=1, choices=statuses_choices, default='A')
-    cylinderSequence = models.CharField(max_length=30, blank=True)
-    sealingSequence = models.CharField(max_length=30, blank=True)
-    CP = models.FloatField(max_length=8, blank=True)
-    DDP = models.FloatField(max_length=8, blank=True)
-    GAIASP = models.FloatField(max_length=8, blank=True)
-    SGPP = models.FloatField(max_length=8, blank=True)
-    SGBB = models.IntegerField(blank=True)
-    PCSPerRoll = models.IntegerField(blank=True)
-    PCSPerPallet = models.IntegerField(blank=True)
-    MOQ = models.IntegerField(blank=True)
-    deflatedWidth = models.IntegerField(blank=True)
-    deflatedLength = models.IntegerField(blank=True)
-    deflatedHeight = models.IntegerField(blank=True)
-    inflatedWidth = models.IntegerField(blank=True)
-    inflatedLength = models.IntegerField(blank=True)
-    inflatedHeight = models.IntegerField(blank=True)
-    CTNAmountPerPallet = models.IntegerField(blank=True)
-    CTNWidth = models.IntegerField(blank=True)
-    CTNLength = models.IntegerField(blank=True)
-    CTNHeight = models.IntegerField(blank=True)
-    nettWeight = models.FloatField(max_length=5, blank=True)
-    grossWeight = models.FloatField(max_length=5, blank=True)
+    cylinderSequence = models.CharField(max_length=30, blank=True, null=True)
+    sealingSequence = models.CharField(max_length=30, blank=True, null=True)
+    CP = models.FloatField(max_length=8, blank=True, null=True)
+    DDP = models.FloatField(max_length=8, blank=True,  null=True)
+    GAIASP = models.FloatField(max_length=8, blank=True,  null=True)
+    SGPP = models.FloatField(max_length=8, blank=True,  null=True)
+    SGBB = models.IntegerField(blank=True,  null=True)
+    PCSPerRoll = models.IntegerField(blank=True,  null=True)
+    PCSPerPallet = models.IntegerField(blank=True,  null=True)
+    MOQ = models.IntegerField(blank=True,  null=True)
+    deflatedWidth = models.IntegerField(blank=True,  null=True)
+    deflatedLength = models.IntegerField(blank=True,  null=True)
+    deflatedHeight = models.IntegerField(blank=True,  null=True)
+    inflatedWidth = models.IntegerField(blank=True,  null=True)
+    inflatedLength = models.IntegerField(blank=True,  null=True)
+    inflatedHeight = models.IntegerField(blank=True,  null=True)
+    CTNAmountPerPallet = models.IntegerField(blank=True,  null=True)
+    CTNWidth = models.IntegerField(blank=True,  null=True)
+    CTNLength = models.IntegerField(blank=True,  null=True)
+    CTNHeight = models.IntegerField(blank=True,  null=True)
+    nettWeight = models.FloatField(max_length=5, blank=True,  null=True)
+    grossWeight = models.FloatField(max_length=5, blank=True,  null=True)
 
     def __str__(self):
         return str(self.id) + ',' + self.description
