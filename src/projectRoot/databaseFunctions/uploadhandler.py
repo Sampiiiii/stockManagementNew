@@ -62,9 +62,6 @@ def handleFile(request, spreadsheetUrl):
     if path.endswith('.xlsx'):
         intelligentSpreadsheetParser(path)
         messages.info(request, "Parsing spreadsheet...")
-    elif path.endswith('.csv'):
-        parseCSV(path)
-        messages.info(request, "Parsing CSV...")
     else:
         messages.warning(request, "The selected file is not parsable.")
         HttpResponseRedirect('/documents')
@@ -125,7 +122,8 @@ def intelligentSpreadsheetParser(path):
             elif " / CTN / Rolls " in checkString:
                 checkString = checkString.replace(" / CTN / Rolls ", "")
             colindex += 1
-            if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True: # This is to increase phonetic algorithm accuracy
+            # This is to increase phonetic algorithm accuracy
+            if appendString == "Dimension Deflated" or appendString == "Dimension Inflated / Outer" or continueAppend == True: 
                 tempCounter += 1                
                 if tempCounter == 1:
                     tempString = appendString
@@ -150,21 +148,20 @@ def intelligentSpreadsheetParser(path):
                     string = key
             
             listOfColumIndexesAndAssociatedFields.append((listOfEntriesAndTypes.get(string), string, colindex))
-    # Loop Ends
+        
+    print(listOfColumIndexesAndAssociatedFields)
+
     for rowIndex in range(2, sheet.nrows):
         tempList = []
         colcount = 0
-        col = ""
         for cell in sheet.row(rowIndex):
             dataType = "null"
             for t in listOfColumIndexesAndAssociatedFields: # T is the tuple inside the list
                 if colcount == int(t[2]):
                     dataType = str(t[0])
-                    col = str(t[1])
                     break
             else:
                 dataType =="null"
-                col = ""
             var = cell.value # Lookup what column the cell is currently under and compare it to listOfColumIndexes....
             if dataType == "int":
                 var = re.sub(r"\D","",str(var))
