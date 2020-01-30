@@ -5,15 +5,14 @@ from .models import document, product
 class documentForm(forms.ModelForm):
     class Meta:
         model = document
-        fields = ('name', 'document')
+        fields = ('document',)
   
 class productForm(forms.ModelForm):
     class Meta:
         model = product
-        fields = ('amendedPN', 'gaiaPN', 'SgPN', 'supplementaryPN',
+        fields = ('amendedPN', 'GAIAPN', 'SgPN', 'supplementaryPN',
         'description', 'productCategory', 'isManual', 'filmThickness',
-        'status', 'cylinderSequence', 'sealingSequence', 'USDCostPrice',
-        'deliveredDutyGBP', 'gaiaSellPrice', 'samuelGrantPurchasePrice', 'samuelGrantBuyback',
-        'PCSPerObject', 'amountPerPallet', 'minimumOrderQuantity', 'deflatedWidth',
+        'STATUS', 'cylinderSequence', 'sealingSequence', 'CP',
+        'DDP', 'GAIASP', 'SGPP', 'SGBB', 'PCSPerRoll', 'PCSPerPallet', 'MOQ', 'deflatedWidth',
         'deflatedLength', 'deflatedHeight', 'inflatedWidth', 'inflatedLength', 'inflatedHeight',
-        'CTNAmountPerPallet', 'CTNWidth', 'CTNLength', 'CTNHeight', 'netWeight', 'grossWeight')
+        'CTNAmountPerPallet', 'CTNWidth', 'CTNLength', 'CTNHeight', 'nettWeight', 'grossWeight')
