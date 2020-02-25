@@ -18,6 +18,7 @@
             <th>Product Number</th>
             <th>Description</th>
             <th>USD Cost Price</th>
+            <th>View</th>
             <th>Delete</th>
             <th>Modify</th>
         </tr>
@@ -28,6 +29,11 @@
             <td>{{p.amendedPN}}</td>
             <td>{{p.description}}</td>
             <td>{{p.USDCostPrice}}</td>
+            <td>
+                <form method="post" action="{% url 'view_product' p.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">View</button>
+            </td>
             <td>
                 <form method="post" action="{% url 'delete_product' p.pk %}">
                     {% csrf_token %}

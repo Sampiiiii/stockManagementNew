@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% block content_header %}
+<h2>Product: {{p.amendedPN}}</h2>
+{% endblock %}
+<table>
+    <thead>
+        <tr>
+            <th>Product Date</th>
+            <th>FacilityID</th>
+            <th>Facility Location</th>
+            <th>Opening Balance</th>
+            <th>Forecasted Balance For Following Week</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{pH.productDate}}</td>
+            <td>{{pH.facilityID}}</td>
+            <td>{{f.facilityLocation}}</td>
+            <td>{{pH.openingBalance}}</td>
+            <td>{{pH.forecastedUsage}}</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
